@@ -15,6 +15,7 @@ The function returns an array of meta data for the aws instances. Each object in
 * `'privateIpAddress'` *(string)* The private ip address of the instance.
 * `'name'` *(string)* The name of the instance.
 * `'tagSet'` *(array)* Meta data in the form of an array of key value pairs. These tags and values are administred from the aws console.
+* `'online'` *(boolean)* `true` if the instance is online, otherwise `false`.
 
 ## USAGE
 ```js
@@ -45,7 +46,8 @@ Outputs:
         "key": "foo",
         "value": "bar"
       }
-    ]
+    ],
+    "online": true
   }
 ]
 ```
