@@ -41,15 +41,14 @@ function getInstances(options, cb) {
     }
 
     function filter(instances) {
-      return instances.filter(function(instance) {
-        return instance.instanceState.name === 'running'
-      }).map(function(instance) {
+      return instances.map(function(instance) {
         var tagSet = getTagSet(instance)
         return {
           ipAddress: instance.ipAddress,
           privateIpAddress: instance.privateIpAddress,
           name: getName(tagSet),
-          tagSet: tagSet
+          tagSet: tagSet,
+          online: instance.instanceState.name === 'running'
         }
       })
     }
