@@ -8,10 +8,16 @@ test('we can get some data from aws', function (t) {
   }
   getInstances(opts, function(err, instances) {
     t.ok(!err, 'got some instances from aws')
-    t.ok(Array.isArray(instances), 'got an array that has at least one instance')
-    t.ok(instances[0].ipAddress, 'the first instance has an ip address')
-    t.ok(instances[0].privateIpAddress, 'the first instance has a private ip address')
-    t.ok(instances[0].name, 'the first instance has a type')
+    t.ok(Array.isArray(instances), 'result should be an array of instances')
+    t.ok(instances.length > 0, 'and it should contain at least one element')
+    var instance = instances[0]
+    t.ok(instance.ipAddress, 'an instance has an ip address property')
+    t.ok(instance.privateIpAddress, 'an instance has a private ip address property')
+    t.ok(instance.name, 'an instance has a type')
+    var tagSet = instance.tagSet
+    t.ok(tagSet, 'an instance has a tagSet property')
+    t.ok(Array.isArray(tagSet), 'a tag set should be an array')
+    t.ok(typeof instance.online != 'undefined', 'an instance has an online property')
     t.end()
   })
 })
