@@ -4,69 +4,67 @@ var config = require('rc')('aws-instances', {
   secretAccessKey: ''
 })
 
-function getInstances(options, cb) {
+module.exports = function(options) {
 
-  if (typeof options == 'function') {
-    cb = options
-    options = config
-  }
+  options = options || config
 
-  if (!options.accessKeyId) throw new Error('missing options.accessKeyId')
-  if (!options.secretAccessKey) throw new Error('missing options.secretAccessKey')
-  if (typeof cb != 'function') throw new Error('missing callback')
+  return function(cb) {
 
-  var ec2 = aws.createEC2Client(
-    options.accessKeyId,
-    options.secretAccessKey,
-    { version: '2014-05-01' }
-  )
+    if (!options.accessKeyId) throw new Error('missing options.accessKeyId')
+    if (!options.secretAccessKey) throw new Error('missing options.secretAccessKey')
+    if (typeof cb != 'function') throw new Error('missing callback')
 
-  ec2.call('DescribeInstances', {}, function(err, result) {
-    if (err) return cb(err, [])
+    var ec2 = aws.createEC2Client(
+          options.accessKeyId,
+          options.secretAccessKey,
+          { version: '2014-05-01' }
+        )
 
-    cb(null, filter(getInstancesFromResult()))
+    ec2.call('DescribeInstances', {}, function(err, result) {
+      if (err) return cb(err, [])
 
-    function getInstancesFromResult() {
-      var instances = []
-      result.reservationSet.item.forEach(function(instance) {
-        if (Array.isArray(instance.instancesSet.item)) {
-          instance.instancesSet.item.forEach(function(item) {
-            instances.push(item)
-          })
-        } else {
-          instances.push(instance.instancesSet.item)
-        }
-      })
-      return instances
-    }
+      cb(null, filter(getInstancesFromResult()))
 
-    function filter(instances) {
-      return instances.map(function(instance) {
-        var tagSet = getTagSet(instance)
-        return {
-          ipAddress: instance.ipAddress,
-          privateIpAddress: instance.privateIpAddress,
-          name: getName(tagSet),
-          tagSet: tagSet,
-          online: instance.instanceState.name === 'running'
-        }
-      })
-    }
-
-    function getName(tagSet) {
-      for (var i = 0; i < tagSet.length; ++i) {
-        if (tagSet[i].key.toLowerCase() === 'name') return tagSet[i].value
+      function getInstancesFromResult() {
+        var instances = []
+        result.reservationSet.item.forEach(function(instance) {
+          if (Array.isArray(instance.instancesSet.item)) {
+            instance.instancesSet.item.forEach(function(item) {
+              instances.push(item)
+            })
+          } else {
+            instances.push(instance.instancesSet.item)
+          }
+        })
+        return instances
       }
-      return ''
-    }
 
-    function getTagSet(instance) {
-      if (!instance.tagSet || !instance.tagSet.item) return []
-      var item = instance.tagSet.item
-      return Array.isArray(item) ? item : [ item ]
-    }
+      function filter(instances) {
+        return instances.map(function(instance) {
+          var tagSet = getTagSet(instance)
+          return {
+            ipAddress: instance.ipAddress,
+            privateIpAddress: instance.privateIpAddress,
+            name: getName(tagSet),
+            tagSet: tagSet,
+            online: instance.instanceState.name === 'running'
+          }
+        })
+      }
 
-  })
+      function getName(tagSet) {
+        for (var i = 0; i < tagSet.length; ++i) {
+          if (tagSet[i].key.toLowerCase() === 'name') return tagSet[i].value
+        }
+        return ''
+      }
+
+      function getTagSet(instance) {
+        if (!instance.tagSet || !instance.tagSet.item) return []
+        var item = instance.tagSet.item
+        return Array.isArray(item) ? item : [ item ]
+      }
+
+    })
+  }
 }
-
-module.exports = getInstances
