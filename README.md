@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/micnews/aws-instances.svg?branch=master)](https://travis-ci.org/micnews/aws-instances)
+
 ## SYNOPSIS
 Get a list of aws instances and their meta data. This is merely a convenience wrapper module around the ec2 part of [`aws-lib`](https://github.com/livelycode/aws-lib).
 
