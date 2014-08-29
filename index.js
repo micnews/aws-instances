@@ -1,22 +1,18 @@
 var aws = require('aws-lib')
-var config = require('rc')('aws-instances', {
-  accessKeyId: '',
-  secretAccessKey: ''
-})
 
-module.exports = function(options) {
+module.exports = function(config) {
 
-  options = options || config
+  config = config || require('./config')
 
   return function(cb) {
 
-    if (!options.accessKeyId) throw new Error('missing options.accessKeyId')
-    if (!options.secretAccessKey) throw new Error('missing options.secretAccessKey')
+    if (!config.accessKeyId) throw new Error('config missing accessKeyId')
+    if (!config.secretAccessKey) throw new Error('config missing secretAccessKey')
     if (typeof cb != 'function') throw new Error('missing callback')
 
     var ec2 = aws.createEC2Client(
-          options.accessKeyId,
-          options.secretAccessKey,
+          config.accessKeyId,
+          config.secretAccessKey,
           { version: '2014-05-01' }
         )
 
@@ -67,4 +63,11 @@ module.exports = function(options) {
 
     })
   }
+}
+
+if (!module.parent) {
+  // node index.js --config=/path/to/some/config.json
+  module.exports()(function(err, result) {
+    console.log(err, JSON.stringify(result, null, 2))
+  })
 }
