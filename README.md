@@ -19,12 +19,12 @@ The function returns an array of meta data for the aws instances. Each object in
 
 ## USAGE
 ```js
-var getInstances = require('aws-instances')
 var opts = {
   accessKeyId: 'LKSJO32I4809SAAOJ2L3M34',
   secretAccessKey: '234p900esdrgfwklok342o98er09g34ol5j345lj'
 }
-getInstances(opts, function(err, instances) {
+var getInstances = require('aws-instances')(opts)
+getInstances(function(err, instances) {
   console.log(JSON.stringify(instances, null, 2))
 })
 ```
