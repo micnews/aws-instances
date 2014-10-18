@@ -37,22 +37,22 @@ module.exports = function(config) {
 
       function filter(instances) {
         return instances.map(function(instance) {
-          var tagSet = getTagSet(instance)
           return {
             ipAddress: instance.ipAddress,
             privateIpAddress: instance.privateIpAddress,
-            name: getName(tagSet),
-            tagSet: tagSet,
+            tags: getTags(instance),
             online: instance.instanceState.name === 'running'
           }
         })
       }
 
-      function getName(tagSet) {
-        for (var i = 0; i < tagSet.length; ++i) {
-          if (tagSet[i].key.toLowerCase() === 'name') return tagSet[i].value
-        }
-        return ''
+      function getTags(instance) {
+        var tags = {}
+        var tagSet = getTagSet(instance)
+        tagSet.forEach(function(tag) {
+          tags[tag.key.toLowerCase()] = tag.value.toLowerCase()
+        })
+        return tags
       }
 
       function getTagSet(instance) {

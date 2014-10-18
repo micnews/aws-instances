@@ -13,8 +13,7 @@ The function returns an array of meta data for the aws instances. Each object in
 
 * `'ipAddress'` *(string)* The public ip address of the instance.
 * `'privateIpAddress'` *(string)* The private ip address of the instance.
-* `'name'` *(string)* The name of the instance.
-* `'tagSet'` *(array)* Meta data in the form of an array of key value pairs. These tags and values are administred from the aws console.
+* `'tags'` *(object)* Meta data object with key value pairs. These tags and values are administred from the aws console.
 * `'online'` *(boolean)* `true` if the instance is online, otherwise `false`.
 
 ## USAGE
@@ -36,17 +35,9 @@ Outputs:
   {
     "ipAddress": "xyz.xyz.xyz.xyz",
     "privateIpAddress": "zyx.zyx.zyx.zyx",
-    "name": "My Instance",
-    "tagSet": [
-      {
-        "key": "Name",
-        "value": "My Instance"
-      },
-      {
-        "key": "foo",
-        "value": "bar"
-      }
-    ],
+    "tags": {
+      "name": "My Instance"
+    },
     "online": true
   }
 ]
