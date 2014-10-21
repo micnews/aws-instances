@@ -11,6 +11,8 @@ Exposes a function which takes an optional options object and a callback. The ob
 
 The function returns an array of meta data for the aws instances. Each object in the array have the following properties:
 
+* `'id'` *(string)* Instance id.
+* `'type'` *(string)* Instance type, e.g. `t2.micro`.
 * `'ipAddress'` *(string)* The public ip address of the instance.
 * `'privateIpAddress'` *(string)* The private ip address of the instance.
 * `'tags'` *(object)* Meta data object with key value pairs. These tags and values are administred from the aws console.
