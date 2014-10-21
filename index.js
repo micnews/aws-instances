@@ -38,6 +38,8 @@ module.exports = function(config) {
       function filter(instances) {
         return instances.map(function(instance) {
           return {
+            id: instance.instanceId,
+            type: instance.instanceType,
             ipAddress: instance.ipAddress,
             privateIpAddress: instance.privateIpAddress,
             tags: getTags(instance),
