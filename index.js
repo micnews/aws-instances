@@ -52,7 +52,12 @@ module.exports = function(config) {
         var tags = {}
         var tagSet = getTagSet(instance)
         tagSet.forEach(function(tag) {
-          tags[tag.key.toLowerCase()] = tag.value.toLowerCase()
+          if (typeof tag.value == 'string') {
+            tags[tag.key.toLowerCase()] = tag.value.toLowerCase()
+          }
+          else {
+            tags[tag.key.toLowerCase()] = ''
+          }
         })
         return tags
       }
